@@ -1,16 +1,19 @@
 'use client'
 import Link from "next/link";
 import NavLink from "./NavLink";
+import { FaSearch } from "react-icons/fa";
+import ThemeToggole from "./ThemeToggole";
+
 
 
 
 const Navbar = () => {
     const nav = <>
-        <NavLink href={'/'}>Home</NavLink>
-        <NavLink href={'/ideas'}>Ideas</NavLink>
-        <NavLink href={'/addidea'}>Add Idea</NavLink>
-        <NavLink href={'/myideas'}>My Ideas</NavLink>
-        <NavLink href={'/myinteractions'}>My Interactions</NavLink>
+        <NavLink className='text-white' href={'/'}>Home</NavLink>
+        <NavLink className='text-white' href={'/ideas'}>Ideas</NavLink>
+        <NavLink className='text-white' href={'/addidea'}>Add Idea</NavLink>
+        <NavLink className='text-white' href={'/myideas'}>My Ideas</NavLink>
+        <NavLink className='text-white' href={'/myinteractions'}>My Interactions</NavLink>
     </>
     return (
         <div>
@@ -22,7 +25,7 @@ const Navbar = () => {
                         </div>
                         <ul
                             tabIndex={-1}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-5 mt-3 w-52 p-2 shadow">
+                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-5 mt-3 w-52 p-2 shadow ">
                             {nav}
                         </ul>
                     </div>
@@ -35,7 +38,11 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <button className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-emerald-500/30 hover:scale-105 transform inline-flex items-center gap-2">
+                    <ThemeToggole></ThemeToggole>
+                    <Link href={'/search'}>
+                  <p className="p-2 m-2 text-2xl text-white cursor-pointer"><FaSearch /></p>
+                    </Link>
+                    <button className=" px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-emerald-500/30 hover:scale-105 transform inline-flex items-center gap-2 cursor-pointer">
                     Login
                     </button>
                 </div>
