@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation';
 import { FaEdit, FaTrash, FaPlus, FaSpinner, FaLightbulb } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { authClient } from '@/lib/auth-client';
+import EditModal from '@/components/EditModal';
+import DeleteAlert from '@/components/DeleteAlert';
+
 
 const MyIdeaPage = () => {
   const router = useRouter();
@@ -14,7 +17,11 @@ const MyIdeaPage = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [deletingId, setDeletingId] = useState(null);
+  
+  // Modal states
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [selectedIdea, setSelectedIdea] = useState(null);
 
   const userId = session?.user?.id;
 
@@ -45,33 +52,28 @@ const MyIdeaPage = () => {
     }
   };
 
-  // Handle delete
-  const handleDelete = async (ideaId) => {
-    if (!confirm('Are you sure you want to delete this idea?')) return;
-    
-    try {
-      setDeletingId(ideaId);
-      
-      const res = await fetch(`http://localhost:5000/idea/${ideaId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
-      });
-      
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to delete idea');
-      }
-      
-      setIdeas(ideas.filter(idea => idea._id !== ideaId));
-      toast.success('Idea deleted successfully!');
-    } catch (err) {
-      console.error('Delete error:', err);
-      toast.error(err.message || 'Failed to delete idea');
-    } finally {
-      setDeletingId(null);
-    }
+  // Open Edit Modal
+  const openEditModal = (idea) => {
+    setSelectedIdea(idea);
+    setEditModalOpen(true);
+  };
+
+  // Open Delete Alert
+  const openDeleteAlert = (idea) => {
+    setSelectedIdea(idea);
+    setDeleteAlertOpen(true);
+  };
+
+  // Handle update from EditModal
+  const handleUpdate = (updatedIdea) => {
+    setIdeas(ideas.map(idea => 
+      idea._id === updatedIdea._id ? updatedIdea : idea
+    ));
+  };
+
+  // Handle delete from DeleteAlert
+  const handleDelete = (ideaId) => {
+    setIdeas(ideas.filter(idea => idea._id !== ideaId));
   };
 
   // Loading state
@@ -88,7 +90,7 @@ const MyIdeaPage = () => {
     );
   }
 
-  // ❌ Not logged in - Show Login Card
+  // Not logged in
   if (!userId) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-md">
@@ -98,7 +100,6 @@ const MyIdeaPage = () => {
             <h2 className="text-2xl font-bold text-white">Login Required</h2>
             <p className="text-white/80 mt-1">Please sign in to view your ideas</p>
           </div>
-          
           <div className="p-8 text-center">
             <div className="w-20 h-20 mx-auto bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
               <FaLightbulb className="text-4xl text-gray-400 dark:text-gray-600" />
@@ -166,21 +167,10 @@ const MyIdeaPage = () => {
           <p className="text-sm text-gray-500 dark:text-gray-400">Total Ideas</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{ideas.length}</p>
         </div>
-        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Published</p>
-          <p className="text-2xl font-bold text-green-600">
-            {ideas.filter(i => i.status === 'published').length}
-          </p>
-        </div>
-        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Pending</p>
-          <p className="text-2xl font-bold text-yellow-600">
-            {ideas.filter(i => i.status === 'pending').length}
-          </p>
-        </div>
+       
       </div>
 
-      {/* No Ideas - Create First Idea Card */}
+      {/* No Ideas */}
       {ideas.length === 0 ? (
         <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="relative w-32 h-32 mx-auto mb-6">
@@ -211,7 +201,6 @@ const MyIdeaPage = () => {
           </div>
         </div>
       ) : (
-        /* Ideas Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {ideas.map((idea) => (
             <div
@@ -233,18 +222,7 @@ const MyIdeaPage = () => {
                   </div>
                 )}
                 
-                {/* Status Badge */}
-                <div className="absolute top-3 right-3">
-                  <span className={`px-3 py-1 text-xs font-medium rounded-full shadow-lg ${
-                    idea.status === 'published'
-                      ? 'bg-green-500 text-white'
-                      : idea.status === 'pending'
-                      ? 'bg-yellow-500 text-white'
-                      : 'bg-gray-500 text-white'
-                  }`}>
-                    {idea.status || 'Pending'}
-                  </span>
-                </div>
+               
               </div>
 
               {/* Content */}
@@ -290,23 +268,17 @@ const MyIdeaPage = () => {
 
                 {/* Action Buttons - Edit & Delete */}
                 <div className="flex items-center gap-2 pt-3 mt-2 border-t border-gray-200 dark:border-gray-800">
-                  <Link
-                    href={`/editidea/${idea._id}`}
+                  <button
+                    onClick={() => openEditModal(idea)}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                   >
                     <FaEdit /> Edit
-                  </Link>
+                  </button>
                   <button
-                    onClick={() => handleDelete(idea._id)}
-                    disabled={deletingId === idea._id}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => openDeleteAlert(idea)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                   >
-                    {deletingId === idea._id ? (
-                      <FaSpinner className="animate-spin" />
-                    ) : (
-                      <FaTrash />
-                    )}
-                    Delete
+                    <FaTrash /> Delete
                   </button>
                 </div>
               </div>
@@ -314,6 +286,21 @@ const MyIdeaPage = () => {
           ))}
         </div>
       )}
+
+      {/* Modals */}
+      <EditModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        idea={selectedIdea}
+        onUpdate={handleUpdate}
+      />
+
+      <DeleteAlert
+        isOpen={deleteAlertOpen}
+        onClose={() => setDeleteAlertOpen(false)}
+        idea={selectedIdea}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };
