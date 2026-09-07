@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import IdeaCard from "@/components/IdeaCard";
+import { CiFilter } from 'react-icons/ci';
 
 const IdeasPage = () => {
   const [allIdeas, setAllIdeas] = useState([]);
@@ -123,7 +124,7 @@ const IdeasPage = () => {
           >
             {categories.map((category) => (
               <option key={category} value={category}>
-                {category === 'All' ? '📋 All Categories' : category}
+                {category === 'All' ?  `All Categories  ` : category}
               </option>
             ))}
           </select>
