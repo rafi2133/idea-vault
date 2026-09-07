@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
+import { authClient } from '@/lib/auth-client';
 
+
+
+
+  
 const AddIdeaForm = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,13 +92,16 @@ const AddIdeaForm = () => {
     .map(tag => tag.trim())
     .filter(tag => tag !== '');
 
-  const ideaData = {
+ const ideaData = {
     ...formData,
     tags: tagsArray,
-    estimatedBudget: formData.estimatedBudget ? parseFloat(formData.estimatedBudget) : null,
+    estimatedBudget: formData.estimatedBudget
+        ? parseFloat(formData.estimatedBudget)
+        : null,
     createdAt: new Date().toISOString(),
-    status: 'pending'
-  };
+    status: 'pending',
+    userId: session.user.id
+};
 
   try {
     const res = await fetch('http://localhost:5000/idea', {
@@ -120,8 +128,14 @@ const AddIdeaForm = () => {
     setIsSubmitting(false);
   }
 };
+const {
+        data: session,
+        isPending,
+    } = authClient.useSession()
+    
 
   return (
+    
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
