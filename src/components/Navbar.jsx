@@ -2,12 +2,17 @@
 import Link from "next/link";
 import NavLink from "./NavLink";
 import { FaSearch } from "react-icons/fa";
-import ThemeToggole from "./ThemeToggole";
-
-
+import dynamic from 'next/dynamic';
 
 
 const Navbar = () => {
+    const ThemeToggole = dynamic(
+  () => import('./ThemeToggole'),
+  { 
+    ssr: false,
+    loading: () => <div className="w-12 h-6"></div> 
+  }
+);
     const nav = <>
         <NavLink className='text-white' href={'/'}>Home</NavLink>
         <NavLink className='text-white' href={'/ideas'}>Ideas</NavLink>
@@ -16,7 +21,7 @@ const Navbar = () => {
         <NavLink className='text-white' href={'/myinteractions'}>My Interactions</NavLink>
     </>
     return (
-        <div>
+        <div className="mb-10">
             <div className="navbar bg-base-100 shadow-sm">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -42,7 +47,7 @@ const Navbar = () => {
                     <Link href={'/search'}>
                   <p className="p-2 m-2 text-2xl text-white cursor-pointer"><FaSearch /></p>
                     </Link>
-                    <button className=" px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-emerald-500/30 hover:scale-105 transform inline-flex items-center gap-2 cursor-pointer">
+                    <button className=" px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold rounded-4xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-emerald-500/30 hover:scale-105 transform inline-flex items-center gap-2 cursor-pointer">
                     Login
                     </button>
                 </div>

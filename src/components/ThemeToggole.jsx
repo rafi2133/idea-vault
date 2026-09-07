@@ -5,7 +5,7 @@ import { Switch } from "@heroui/react";
 
 const ThemeToggole = () => {
     const { theme, setTheme } = useTheme();
-    // onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+  
     return (
         <div>
             <Switch defaultSelected aria-label="Theme toggle" size="lg" onChange={()=> setTheme(theme === 'dark' ? '"light' : 'dark')}>
