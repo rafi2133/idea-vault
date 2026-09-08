@@ -1,4 +1,3 @@
-// components/DeleteAlert.jsx
 "use client";
 import React, { useState } from 'react';
 import { FaTimes, FaTrash, FaSpinner } from 'react-icons/fa';

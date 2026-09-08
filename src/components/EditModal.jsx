@@ -1,4 +1,3 @@
-// components/EditModal.jsx
 "use client";
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaSpinner } from 'react-icons/fa';
