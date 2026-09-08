@@ -4,6 +4,7 @@ import HowItWorks from "@/components/HowItWorks";
 import TrendingIdeas from "@/components/TrendingIdeas";
 
 
+
 export default function Home() {
   return (
     <div>
