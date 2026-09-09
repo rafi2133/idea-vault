@@ -37,6 +37,8 @@ const MyIdeasClient = () => {
   }, [userId, isPending]);
 
   const fetchUserIdeas = async () => {
+
+    
     try {
       setLoading(true);
       const res = await fetch(`http://localhost:5000/idea/user/${userId}`);

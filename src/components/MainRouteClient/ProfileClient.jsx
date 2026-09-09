@@ -57,7 +57,7 @@ const ProfileClient = () => {
       }
 
       await refetch();
-      toast.success('Profile updated successfully! 🎉');
+      toast.success('Profile updated successfully! ');
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error(error.message || 'Failed to update profile');

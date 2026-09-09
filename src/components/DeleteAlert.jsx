@@ -1,4 +1,5 @@
 "use client";
+import { authClient } from '@/lib/auth-client';
 import React, { useState } from 'react';
 import { FaTimes, FaTrash, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -10,10 +11,14 @@ const DeleteAlert = ({ isOpen, onClose, idea, onDelete }) => {
 
   const handleDelete = async () => {
     setDeleting(true);
+    const {data:tokenData} = await authClient.token()
+    
     try {
       const res = await fetch(`http://localhost:5000/idea/${idea._id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          authorization: `Bearer ${tokenData?.token}`
+         },
         body: JSON.stringify({ userId: idea.userId }),
       });
 

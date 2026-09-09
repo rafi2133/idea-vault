@@ -58,7 +58,7 @@ const Signuppage = () => {
       }
 
       if (res) {
-        toast.success('Account created successfully! 🎉');
+        toast.success('Account created successfully! ');
         router.push('/');
       }
     } catch (error) {

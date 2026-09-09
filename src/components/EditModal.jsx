@@ -1,4 +1,5 @@
 "use client";
+import { authClient } from '@/lib/auth-client';
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -64,10 +65,14 @@ const EditModal = ({ isOpen, onClose, idea, onUpdate }) => {
         estimatedBudget: formData.estimatedBudget ? parseFloat(formData.estimatedBudget) : null,
         userId: idea.userId
       };
-
+       
+      const {data:tokenData} = await authClient.token()
+      
       const res = await fetch(`http://localhost:5000/idea/${idea._id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          authorization: `Bearer ${tokenData?.token}`
+         },
         body: JSON.stringify(ideaData),
       });
 
@@ -77,7 +82,7 @@ const EditModal = ({ isOpen, onClose, idea, onUpdate }) => {
         throw new Error(data.error || 'Failed to update idea');
       }
 
-      toast.success('Idea updated successfully! 🎉');
+      toast.success('Idea updated successfully! ');
       onUpdate(data.data);
       onClose();
     } catch (error) {

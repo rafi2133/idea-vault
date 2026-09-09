@@ -7,5 +7,6 @@ export const metadata = {
 import MyIdeasClient from '@/components/MainRouteClient/MyIdeasClient';
 
 export default function MyIdeasPage() {
+ 
   return <MyIdeasClient />;
 }

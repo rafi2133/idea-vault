@@ -1,54 +1,39 @@
 // components/MainRouteClient/IdeaDetailsClient.jsx
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AiTwotoneLike, AiOutlineLike } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { authClient } from '@/lib/auth-client';
 import { FaDollarSign, FaSpinner } from 'react-icons/fa';
 import { FaPeopleGroup } from 'react-icons/fa6';
 
-const IdeaDetailsClient = () => {
+const IdeaDetailsClient = ({ idea: initialIdea }) => {
   const router = useRouter();
-  const params = useParams();
-  const id = params?.id;
-  
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
   const userName = session?.user?.name;
   const userImage = session?.user?.image;
 
-  const [idea, setIdea] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [comments, setComments] = useState([]);
+  const [idea, setIdea] = useState(initialIdea);
+  const [liked, setLiked] = useState(initialIdea?.likes?.includes(userId) || false);
+  const [likeCount, setLikeCount] = useState(initialIdea?.likes?.length || 0);
+  const [comments, setComments] = useState(initialIdea?.comments || []);
   const [newComment, setNewComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch idea details
-  useEffect(() => {
-    const fetchIdea = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/idea/${id}`);
-        if (!res.ok) throw new Error('Failed to fetch idea');
-        const data = await res.json();
-        setIdea(data);
-        setLikeCount(data.likes?.length || 0);
-        setLiked(data.likes?.includes(userId) || false);
-        setComments(data.comments || []);
-      } catch (error) {
-        console.error('Error:', error);
-        toast.error('Failed to load idea');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) fetchIdea();
-  }, [id, userId]);
+  if (!idea) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Idea not found</h2>
+        <Link href="/ideas" className="mt-4 inline-block text-emerald-500 hover:text-emerald-600">
+          Back to Ideas
+        </Link>
+      </div>
+    );
+  }
 
   // Handle Like/Unlike
   const handleLike = async () => {
@@ -57,11 +42,13 @@ const IdeaDetailsClient = () => {
       router.push('/signin');
       return;
     }
-
+ 
     try {
-      const res = await fetch(`http://localhost:5000/idea/${id}/like`, {
+      const res = await fetch(`http://localhost:5000/idea/${idea._id}/like`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+         
+         },
         body: JSON.stringify({ userId }),
       });
 
@@ -77,6 +64,7 @@ const IdeaDetailsClient = () => {
     }
   };
 
+  // Handle Comment Submit
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) {
@@ -91,10 +79,16 @@ const IdeaDetailsClient = () => {
     }
 
     setSubmitting(true);
+
+     
+     
     try {
-      const res = await fetch(`http://localhost:5000/idea/${id}/comment`, {
+      
+      const res = await fetch(`http://localhost:5000/idea/${idea._id}/comment`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' ,
+       
+        },
         body: JSON.stringify({
           userId,
           userName,
@@ -116,26 +110,6 @@ const IdeaDetailsClient = () => {
       setSubmitting(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <FaSpinner className="animate-spin text-5xl text-emerald-500 mx-auto mb-4" />
-        <p className="text-gray-600 dark:text-gray-400">Loading idea...</p>
-      </div>
-    );
-  }
-
-  if (!idea) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Idea not found</h2>
-        <Link href="/ideas" className="mt-4 inline-block text-emerald-500 hover:text-emerald-600">
-          Back to Ideas
-        </Link>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -167,14 +141,7 @@ const IdeaDetailsClient = () => {
               <span className="text-8xl">💡</span>
             </div>
           )}
-          {/* Status Badge */}
-          <div className="absolute top-4 right-4">
-            <span className={`px-3 py-1 text-sm font-medium rounded-full shadow-lg ${
-              idea.status === 'published' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'
-            }`}>
-              {idea.status || 'Pending'}
-            </span>
-          </div>
+         
         </div>
 
         {/* Content */}
