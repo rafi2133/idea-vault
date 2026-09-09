@@ -39,7 +39,7 @@ const Banner = () => {
     ];
 
     return (
-        <div className="relative w-full h-screen max-h-[800px] min-h-[500px] overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden ">
             <style jsx>{`
                 .banner-wrapper {
                     position: relative;
@@ -51,6 +51,7 @@ const Banner = () => {
                 .banner-wrapper :global(.swiper) {
                     width: 100%;
                     height: 100%;
+                    
                 }
 
                 .banner-wrapper :global(.swiper-slide) {

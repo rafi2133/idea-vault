@@ -47,11 +47,11 @@ const Navbar = () => {
   );
 
   const nav = <>
-    <NavLink className='text-white' href={'/'}>Home</NavLink>
-    <NavLink className='text-white' href={'/ideas'}>Ideas</NavLink>
-    <NavLink className='text-white' href={'/addidea'}>Add Idea</NavLink>
-    <NavLink className='text-white' href={'/myideas'}>My Ideas</NavLink>
-    <NavLink className='text-white' href={'/myinteractions'}>My Interactions</NavLink>
+    <NavLink  href={'/'}>Home</NavLink>
+    <NavLink  href={'/ideas'}>Ideas</NavLink>
+    <NavLink  href={'/addidea'}>Add Idea</NavLink>
+    <NavLink  href={'/myideas'}>My Ideas</NavLink>
+    <NavLink  href={'/myinteractions'}>My Interactions</NavLink>
   </>;
 
   return (
@@ -64,15 +64,15 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-5 mt-3 w-52 p-2 shadow ">
+              className="menu menu-sm dropdown-content text-black bg-[#d9ebd8] rounded-box z-5 mt-3 w-52 p-2 shadow ">
               {nav}
             </ul>
           </div>
-          <Link href={'/'} className="btn btn-ghost font-bold text-xl">Idea<span className="text-[#44cc62]">Vault</span></Link>
+          <Link href={'/'} className="btn btn-ghost font-bold text-xl"><span className="text-white">Idea</span><span className="text-[#44cc62]">Vault</span></Link>
         </div>
         
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-4">
+          <ul className="menu text-white menu-horizontal px-1 gap-4">
             {nav}
           </ul>
         </div>
