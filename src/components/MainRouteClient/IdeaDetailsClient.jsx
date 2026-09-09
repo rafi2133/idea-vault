@@ -44,7 +44,7 @@ const IdeaDetailsClient = ({ idea: initialIdea }) => {
     }
  
     try {
-      const res = await fetch(`http://localhost:5000/idea/${idea._id}/like`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
          
@@ -84,7 +84,7 @@ const IdeaDetailsClient = ({ idea: initialIdea }) => {
      
     try {
       
-      const res = await fetch(`http://localhost:5000/idea/${idea._id}/comment`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' ,
        

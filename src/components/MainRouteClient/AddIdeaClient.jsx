@@ -101,7 +101,7 @@ const AddIdeaClient = () => {
     const {data:tokenData} = await authClient.token()
 
     try {
-      const res = await fetch('http://localhost:5000/idea', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

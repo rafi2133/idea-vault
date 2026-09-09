@@ -14,7 +14,7 @@ const DeleteAlert = ({ isOpen, onClose, idea, onDelete }) => {
     const {data:tokenData} = await authClient.token()
     
     try {
-      const res = await fetch(`http://localhost:5000/idea/${idea._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json',
           authorization: `Bearer ${tokenData?.token}`

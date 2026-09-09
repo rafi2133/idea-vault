@@ -68,7 +68,7 @@ const EditModal = ({ isOpen, onClose, idea, onUpdate }) => {
        
       const {data:tokenData} = await authClient.token()
       
-      const res = await fetch(`http://localhost:5000/idea/${idea._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${idea._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json',
           authorization: `Bearer ${tokenData?.token}`

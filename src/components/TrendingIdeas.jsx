@@ -12,7 +12,7 @@ const TrendingIdeas = () => {
   useEffect(() => {
     const fetchTrendingIdeas = async () => {
       try {
-        const res = await fetch('http://localhost:5000/idea?limit=6');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea?limit=6`);
         if (!res.ok) throw new Error('Failed to fetch trending ideas');
         const data = await res.json();
         const ideasData = Array.isArray(data) ? data : data.data || [];

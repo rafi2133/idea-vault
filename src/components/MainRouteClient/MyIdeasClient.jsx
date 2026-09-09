@@ -41,7 +41,7 @@ const MyIdeasClient = () => {
     
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/idea/user/${userId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/user/${userId}`);
       if (!res.ok) throw new Error('Failed to fetch your ideas');
       const data = await res.json();
       setIdeas(data);

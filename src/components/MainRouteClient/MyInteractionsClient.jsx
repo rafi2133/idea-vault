@@ -31,7 +31,7 @@ const MyInteractionsClient = () => {
   const fetchInteractions = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/idea/interactions/${userId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/interactions/${userId}`);
       if (!res.ok) throw new Error('Failed to fetch interactions');
       const data = await res.json();
       setInteractions(data);

@@ -17,7 +17,7 @@ const IdeasClient = () => {
   useEffect(() => {
     const fetchIdeas = async () => {
       try {
-        const res = await fetch('http://localhost:5000/idea');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea`);
         if (!res.ok) throw new Error('Failed to fetch ideas');
         const data = await res.json();
         const ideas = Array.isArray(data) ? data : data.data || [];
